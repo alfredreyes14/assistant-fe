@@ -24,6 +24,14 @@ function App() {
     stopStreamRef.current = true
   }
 
+  const handleClear = () => {
+    setQuestion("")
+    setLoading(false)
+    setStreamedAnswer("")
+    setShowAnswerSection(false)
+    stopStreamRef.current = false
+  }
+
   const handleResponseStreaming = async data => {
     const reader = data.body.getReader();
     const textDecoder = new TextDecoder();
@@ -53,6 +61,7 @@ function App() {
       setLoading(false)
     }
   }
+
   return (
     <Container
       sx={{
@@ -104,6 +113,7 @@ function App() {
             variant="text"
             color="primary"
             sx={{ mt: 2, outline: "none" }}
+            onClick={() => handleClear()}
           >
             Clear
           </Button>
