@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import Markdown from 'react-markdown'
 import {
   Container,
@@ -18,13 +18,17 @@ function App() {
   const [ loading, setLoading ] = useState(false)
   const [ streamedAnswer, setStreamedAnswer ] = useState("")
   const [ showAnswerSection, setShowAnswerSection ] = useState(false)
+  const stopStreamRef = useRef(false)
+
+  const handleStopStream = () => {
+    stopStreamRef.current = true
+  }
 
   const handleResponseStreaming = async data => {
     const reader = data.body.getReader();
     const textDecoder = new TextDecoder();
-    const counter = true;
     setLoading(false)
-    while (counter) {
+    while (!stopStreamRef.current) {
       const { value, done } = await reader.read();
       if (done) {
         break;
@@ -39,6 +43,7 @@ function App() {
       setStreamedAnswer("")
       setShowAnswerSection(true)
       setLoading(true)
+      stopStreamRef.current = false
       e.preventDefault()
       const response = await processQuestion(question)
       await handleResponseStreaming(response)
@@ -131,7 +136,7 @@ function App() {
                   <IconButton aria-label="stop-stream">
                     <ContentCopy />
                   </IconButton>
-                  <IconButton aria-label="stop-stream">
+                  <IconButton onClick={() => handleStopStream()} aria-label="stop-stream">
                     <Stop sx={{ color: "#fe6464" }} />
                   </IconButton>
                 </Stack>
