@@ -1,35 +1,38 @@
 import { useState } from 'react'
 import Markdown from 'react-markdown'
 import { Container, Stack, TextField, Button, Box } from '@mui/material';
+import { processQuestion } from './service';
 import './App.css'
-
 
 function App() {
   const [ question, setQuestion ] = useState("")
   const [ loading, setLoading ] = useState(false)
   const [ streamedAnswer, setStreamedAnswer ] = useState("")
 
-  const handleClick = async e => {
-    e.preventDefault()
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/ask`, {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ question }), // server is expecting JSON
-    });
+  const handleResponseStreaming = async data => {
+    const reader = data.body.getReader();
+    const textDecoder = new TextDecoder();
+    const counter = true;
 
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    const loopRunner = true;
-
-    while (loopRunner) {
+    while (counter) {
       const { value, done } = await reader.read();
       if (done) {
         break;
       }
-      const decodedChunk = decoder.decode(value, { stream: true });
+      const decodedChunk = textDecoder.decode(value, { stream: true });
       setStreamedAnswer((answer) => answer + decodedChunk);
+    }
+  }
+
+  const handleClick = async e => {
+    try {
+      setStreamedAnswer("")
+      setLoading(true)
+      e.preventDefault()
+      const response = await processQuestion(question)
+      await handleResponseStreaming(response)
+    } catch (exception) {
+      console.log(exception.message)
     }
   }
   return (
@@ -55,7 +58,7 @@ function App() {
           sx={{
             '& .MuiOutlinedInput-root': {
               '& fieldset': {
-                borderRadius: '15px', // Adjust the value as needed
+                borderRadius: '15px'
               },
             },
             width: "80vw",
@@ -81,7 +84,7 @@ function App() {
             sx={{ mt: 2 }}
             onClick={e => handleClick(e)}
           >
-            Ask
+            Ask Me
           </Button>
         </Stack>
         <Stack mt={7}>
