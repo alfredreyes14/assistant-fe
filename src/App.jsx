@@ -6,10 +6,12 @@ import {
   TextField,
   Button,
   Box,
-  Typography
+  Typography,
+  IconButton
 } from '@mui/material';
 import { processQuestion } from './service';
 import './App.css'
+import { ContentCopy, Stop } from '@mui/icons-material';
 
 function App() {
   const [ question, setQuestion ] = useState("")
@@ -58,7 +60,7 @@ function App() {
         display="flex"
         flexDirection="column"
         alignItems="center"
-        justifyContent="center"
+        justifyContent="flex-start"
         minHeight="100vh"
         sx={{
           paddingLeft: "10px"
@@ -121,9 +123,19 @@ function App() {
               }}
               mt={7}
             >
-              <Typography>
-                According to <Typography sx={{ textDecoration: "underline" }} variant="span">OpenAI</Typography>
-              </Typography>
+              <Stack flexDirection="row" sx={{ justifyContent: "space-between", alignItems: "center" }}>
+                <Typography>
+                  According to <Typography sx={{ textDecoration: "underline" }} variant="span">OpenAI</Typography>
+                </Typography>
+                <Stack flexDirection="row">
+                  <IconButton aria-label="stop-stream">
+                    <ContentCopy />
+                  </IconButton>
+                  <IconButton aria-label="stop-stream">
+                    <Stop sx={{ color: "#fe6464" }} />
+                  </IconButton>
+                </Stack>
+              </Stack>
               <Typography sx={{
                 fontSize: "1.2em",
                 marginTop: "10px"
