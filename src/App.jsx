@@ -64,10 +64,18 @@ function App() {
           paddingLeft: "10px"
         }}
       >
+        <Stack>
+          <img
+            style={{
+              width: "350px",
+              height: "330px"
+            }}
+            src="/images/logo.png" 
+          />
+        </Stack>
         <TextField
           label="Enter your question"
           variant="outlined"
-          margin="normal"
           value={question}
           sx={{
             '& .MuiOutlinedInput-root': {
@@ -94,8 +102,7 @@ function App() {
           </Button>
           <Button
             variant="contained"
-            color="primary"
-            sx={{ mt: 2, outline: "none" }}
+            sx={{ mt: 2, outline: "none", backgroundColor: "#21aff6" }}
             onClick={e => handleClick(e)}
           >
             Ask Me
@@ -130,7 +137,23 @@ function App() {
               </Typography>
               {
                 loading
-                  ? <>Answering your question ...</>
+                  ? (
+                    <Stack
+                      flexDirection="column"
+                      sx={{
+                        justifyItems: "center",
+                        alignItems: "center"
+                      }}
+                    >
+                      <img
+                        src="/images/loader.gif"
+                        style={{
+                          width: "250px",
+                          height: "210px"
+                        }}
+                      />
+                    </Stack>
+                  )
                   : (
                     <Markdown>{streamedAnswer}</Markdown>
                   )
