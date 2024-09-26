@@ -64,7 +64,7 @@ function App() {
     }
   }
 
-  const handleClick = async e => {
+  const handleSubmit = async e => {
     if (!question) {
       setSnackBarDetails(colors.ERROR, "Please enter a valid question", true)
       return
@@ -85,6 +85,12 @@ function App() {
       setSnackBarDetails(colors.ERROR, exception.message, true)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleKeyDown = async e => {
+    if (e.key === 'Enter' && !isActionButtonsDisabled) {
+      handleSubmit(e)
     }
   }
 
@@ -112,7 +118,8 @@ function App() {
           setQuestion={setQuestion}
           isActionButtonsDisabled={isActionButtonsDisabled}
           handleClear={handleClear}
-          handleSubmit={handleClick}
+          handleSubmit={handleSubmit}
+          handleKeyDown={handleKeyDown}
         />
         {
           showAnswerSection && (

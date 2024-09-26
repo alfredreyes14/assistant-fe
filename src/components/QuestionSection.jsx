@@ -7,7 +7,8 @@ const QuestionSection = ({
   setQuestion,
   isActionButtonsDisabled,
   handleClear,
-  handleSubmit
+  handleSubmit,
+  handleKeyDown
 }) => {
   return (
     <Stack
@@ -30,6 +31,7 @@ const QuestionSection = ({
           outline: "none"
         }}
         onChange={e => setQuestion(e.target.value)}
+        onKeyDown={handleKeyDown}
       />
       <Stack
         flexDirection="row"
