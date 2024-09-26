@@ -57,6 +57,12 @@ function App() {
   }
 
   const handleClick = async e => {
+    if (!question) {
+      setSnackbarColor(colors.ERROR)
+      setSnackBarMessage("Please enter a valid question")
+      setShowSnackBar(true)
+      return
+    }
     try {
       setStreamedAnswer("")
       setShowAnswerSection(true)
