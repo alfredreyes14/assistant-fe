@@ -22,6 +22,7 @@ const colors = {
 
 function App() {
   const [ question, setQuestion ] = useState("")
+  const [ displayQuestion, setDisplayQuestion ] = useState("")
   const [ loading, setLoading ] = useState(false)
   const [ streamedAnswer, setStreamedAnswer ] = useState("")
   const [ showAnswerSection, setShowAnswerSection ] = useState(false)
@@ -29,10 +30,12 @@ function App() {
   const [ snackbarMessage, setSnackBarMessage ] = useState("")
   const [ snackbarColor, setSnackbarColor ] = useState(colors.PRIMARY)
   const [ isStreamDone, setIsStreamDone ] = useState(false)
+  const [ isAskButtonDisabled, setIsAskButtonDisabled ] = useState(false)
   const stopStreamRef = useRef(false)
 
   const handleStopStream = () => {
     stopStreamRef.current = true
+    setIsAskButtonDisabled(false)
     setIsStreamDone(true)
   }
 
@@ -40,8 +43,10 @@ function App() {
     setQuestion("")
     setLoading(false)
     setStreamedAnswer("")
+    setDisplayQuestion("")
     setShowAnswerSection(false)
     setIsStreamDone(false)
+    setIsAskButtonDisabled(false)
     stopStreamRef.current = false
   }
 
@@ -52,6 +57,7 @@ function App() {
     while (!stopStreamRef.current) {
       const { value, done } = await reader.read();
       if (done) {
+        setIsAskButtonDisabled(false)
         setIsStreamDone(done)
         break;
       }
@@ -68,7 +74,10 @@ function App() {
       return
     }
     try {
+      setIsAskButtonDisabled(true)
       setStreamedAnswer("")
+      setDisplayQuestion(question)
+      setQuestion("")
       setShowAnswerSection(true)
       setLoading(true)
       stopStreamRef.current = false
@@ -144,6 +153,7 @@ function App() {
             variant="contained"
             sx={{ mt: 2, outline: "none", backgroundColor: colors.PRIMARY }}
             onClick={e => handleClick(e)}
+            disabled={isAskButtonDisabled}
           >
             Ask Me
           </Button>
@@ -198,7 +208,7 @@ function App() {
                   Question: 
                 </Typography>
                 <Typography variant="span" sx={{ fontWeight: 600, marginLeft: "5px" }}>
-                  {question}
+                  {displayQuestion}
                 </Typography>
               </Typography>
               {
@@ -230,7 +240,7 @@ function App() {
       </Box>
       <Snackbar
         open={showSnackBar}
-        autoHideDuration={6000}
+        autoHideDuration={3000}
         onClose={() => setShowSnackBar(false)}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
