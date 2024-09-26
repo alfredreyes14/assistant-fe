@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import Markdown from 'react-markdown'
 import {
   Container,
@@ -106,7 +106,7 @@ function App() {
         <Stack mb={7}>
           <img
             style={{
-              width: "250px",
+              width: "300px",
               height: "130px"
             }}
             src="/images/logo2.png" 

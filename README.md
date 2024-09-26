@@ -1,8 +1,28 @@
-# React + Vite
+# Assistant.io FE
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An assistant app powered by OpenAI that accepts a question then provides the answer. Developed using React + Vite, MUI and react-markdown.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Prerequisites
+-  Node
+-  Vite
+-  React
+
+## Getting Started
+Install node modules:
+```
+npm install
+```
+
+To start development server you need to run:
+```
+npm run dev
+```
+
+## Environment Variables
+
+-  **VITE_API_URL** - the api URL, it depends on the value that is set in the Assistant BE
+
+
+## Note
+Environment variable values will be shared by me through a private channel.
