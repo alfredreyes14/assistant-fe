@@ -26,8 +26,8 @@ function App() {
   const [ streamedAnswer, setStreamedAnswer ] = useState("")
   const [ showAnswerSection, setShowAnswerSection ] = useState(false)
   const [ showSnackBar, setShowSnackBar ] = useState(false)
-  const [ snackbarMessage, setSnackBarMessage ] = useState("TEST")
-  const [ snackbarColor, setSnackbarColor ] = useState("#21aff6")
+  const [ snackbarMessage, setSnackBarMessage ] = useState("")
+  const [ snackbarColor, setSnackbarColor ] = useState(colors.PRIMARY)
   const stopStreamRef = useRef(false)
 
   const handleStopStream = () => {
@@ -66,7 +66,9 @@ function App() {
       const response = await processQuestion(question)
       await handleResponseStreaming(response)
     } catch (exception) {
-      console.log(exception.message)
+      setSnackbarColor(colors.ERROR)
+      setSnackBarMessage(exception.message)
+      setShowSnackBar(true)
     } finally {
       setLoading(false)
     }
@@ -90,13 +92,13 @@ function App() {
           paddingLeft: "10px"
         }}
       >
-        <Stack>
+        <Stack mb={7}>
           <img
             style={{
-              width: "350px",
-              height: "330px"
+              width: "250px",
+              height: "130px"
             }}
-            src="/images/logo.png" 
+            src="/images/logo2.png" 
           />
         </Stack>
         <TextField
