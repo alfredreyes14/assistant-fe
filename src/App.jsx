@@ -12,13 +12,12 @@ import {
   Alert
 } from '@mui/material';
 import { processQuestion } from './service';
+import { colors } from './common/colors';
 import './App.css'
 import { ContentCopy, Stop } from '@mui/icons-material';
+import Logo from './components/Logo';
+import QuestionSection from './components/QuestionSection';
 
-const colors = {
-  PRIMARY: "#21aff6",
-  ERROR: "#fe6464"
-}
 
 function App() {
   const [ question, setQuestion ] = useState("")
@@ -112,16 +111,15 @@ function App() {
           paddingLeft: "10px"
         }}
       >
-        <Stack mb={7}>
-          <img
-            style={{
-              width: "300px",
-              height: "130px"
-            }}
-            src="/images/logo2.png" 
-          />
-        </Stack>
-        <TextField
+        <Logo />
+        <QuestionSection
+          question={question}
+          setQuestion={setQuestion}
+          isActionButtonsDisabled={isActionButtonsDisabled}
+          handleClear={handleClear}
+          handleSubmit={handleClick}
+        />
+        {/* <TextField
           label="Enter your question"
           variant="outlined"
           value={question}
@@ -158,7 +156,7 @@ function App() {
           >
             Ask Me
           </Button>
-        </Stack>
+        </Stack> */}
         {
           showAnswerSection && (
             <Stack
