@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Markdown from 'react-markdown'
 import {
   Container,
@@ -28,10 +28,12 @@ function App() {
   const [ showSnackBar, setShowSnackBar ] = useState(false)
   const [ snackbarMessage, setSnackBarMessage ] = useState("")
   const [ snackbarColor, setSnackbarColor ] = useState(colors.PRIMARY)
+  const [ isStreamDone, setIsStreamDone ] = useState(false)
   const stopStreamRef = useRef(false)
 
   const handleStopStream = () => {
     stopStreamRef.current = true
+    setIsStreamDone(true)
   }
 
   const handleClear = () => {
@@ -39,6 +41,7 @@ function App() {
     setLoading(false)
     setStreamedAnswer("")
     setShowAnswerSection(false)
+    setIsStreamDone(false)
     stopStreamRef.current = false
   }
 
@@ -49,6 +52,7 @@ function App() {
     while (!stopStreamRef.current) {
       const { value, done } = await reader.read();
       if (done) {
+        setIsStreamDone(done)
         break;
       }
       const decodedChunk = textDecoder.decode(value, { stream: true });
@@ -69,6 +73,7 @@ function App() {
       setLoading(true)
       stopStreamRef.current = false
       e.preventDefault()
+      setIsStreamDone(false)
       const response = await processQuestion(question)
       await handleResponseStreaming(response)
     } catch (exception) {
@@ -161,20 +166,28 @@ function App() {
                   According to <Typography sx={{ textDecoration: "underline" }} variant="span">OpenAI</Typography>
                 </Typography>
                 <Stack flexDirection="row">
-                  <IconButton
-                    onClick={() => {
-                      navigator.clipboard.writeText(streamedAnswer)
-                      setSnackbarColor(colors.PRIMARY)
-                      setSnackBarMessage("Answer has been copied to the clipboard")
-                      setShowSnackBar(true)
-                    }}
-                    aria-label="stop-stream"
-                  >
-                    <ContentCopy />
-                  </IconButton>
-                  <IconButton onClick={() => handleStopStream()} aria-label="stop-stream">
-                    <Stop sx={{ color: "#fe6464" }} />
-                  </IconButton>
+                  {
+                    (isStreamDone) && (
+                      <IconButton
+                        onClick={() => {
+                          navigator.clipboard.writeText(streamedAnswer)
+                          setSnackbarColor(colors.PRIMARY)
+                          setSnackBarMessage("Answer has been copied to the clipboard")
+                          setShowSnackBar(true)
+                        }}
+                        aria-label="stop-stream"
+                      >
+                        <ContentCopy />
+                      </IconButton>
+                    )
+                  }
+                  {
+                    !isStreamDone && (
+                      <IconButton onClick={() => handleStopStream()} aria-label="stop-stream">
+                        <Stop sx={{ color: "#fe6464" }} />
+                      </IconButton>
+                    )
+                  }
                 </Stack>
               </Stack>
               <Typography sx={{
