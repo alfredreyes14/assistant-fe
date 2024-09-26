@@ -21,7 +21,7 @@ npm run dev
 
 ## Environment Variables
 
--  **VITE_API_URL** - the api URL, it depends on the value that is set in the Assistant BE
+-  **VITE_API_URL** - the api URL, the port number must be the same with the back end port.
 
 
 ## Note
