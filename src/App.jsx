@@ -7,17 +7,27 @@ import {
   Button,
   Box,
   Typography,
-  IconButton
+  IconButton,
+  Snackbar,
+  Alert
 } from '@mui/material';
 import { processQuestion } from './service';
 import './App.css'
 import { ContentCopy, Stop } from '@mui/icons-material';
+
+const colors = {
+  PRIMARY: "#21aff6",
+  ERROR: "#fe6464"
+}
 
 function App() {
   const [ question, setQuestion ] = useState("")
   const [ loading, setLoading ] = useState(false)
   const [ streamedAnswer, setStreamedAnswer ] = useState("")
   const [ showAnswerSection, setShowAnswerSection ] = useState(false)
+  const [ showSnackBar, setShowSnackBar ] = useState(false)
+  const [ snackbarMessage, setSnackBarMessage ] = useState("TEST")
+  const [ snackbarColor, setSnackbarColor ] = useState("#21aff6")
   const stopStreamRef = useRef(false)
 
   const handleStopStream = () => {
@@ -119,7 +129,7 @@ function App() {
           </Button>
           <Button
             variant="contained"
-            sx={{ mt: 2, outline: "none", backgroundColor: "#21aff6" }}
+            sx={{ mt: 2, outline: "none", backgroundColor: colors.PRIMARY }}
             onClick={e => handleClick(e)}
           >
             Ask Me
@@ -143,7 +153,15 @@ function App() {
                   According to <Typography sx={{ textDecoration: "underline" }} variant="span">OpenAI</Typography>
                 </Typography>
                 <Stack flexDirection="row">
-                  <IconButton aria-label="stop-stream">
+                  <IconButton
+                    onClick={() => {
+                      navigator.clipboard.writeText(streamedAnswer)
+                      setSnackbarColor(colors.PRIMARY)
+                      setSnackBarMessage("Answer has been copied to the clipboard")
+                      setShowSnackBar(true)
+                    }}
+                    aria-label="stop-stream"
+                  >
                     <ContentCopy />
                   </IconButton>
                   <IconButton onClick={() => handleStopStream()} aria-label="stop-stream">
@@ -189,6 +207,20 @@ function App() {
           )
         }
       </Box>
+      <Snackbar
+        open={showSnackBar}
+        autoHideDuration={6000}
+        onClose={() => setShowSnackBar(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert
+          onClose={() => setShowSnackBar(false)}
+          variant="filled"
+          sx={{ width: '100%', backgroundColor: snackbarColor }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   )
 }
