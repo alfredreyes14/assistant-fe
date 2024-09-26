@@ -30,12 +30,12 @@ function App() {
   const [ snackbarMessage, setSnackBarMessage ] = useState("")
   const [ snackbarColor, setSnackbarColor ] = useState(colors.PRIMARY)
   const [ isStreamDone, setIsStreamDone ] = useState(false)
-  const [ isAskButtonDisabled, setIsAskButtonDisabled ] = useState(false)
+  const [ isActionButtonsDisabled, setIsActionButtonDisabled ] = useState(false)
   const stopStreamRef = useRef(false)
 
   const handleStopStream = () => {
     stopStreamRef.current = true
-    setIsAskButtonDisabled(false)
+    setIsActionButtonDisabled(false)
     setIsStreamDone(true)
   }
 
@@ -46,7 +46,7 @@ function App() {
     setDisplayQuestion("")
     setShowAnswerSection(false)
     setIsStreamDone(false)
-    setIsAskButtonDisabled(false)
+    setIsActionButtonDisabled(false)
     stopStreamRef.current = false
   }
 
@@ -57,7 +57,7 @@ function App() {
     while (!stopStreamRef.current) {
       const { value, done } = await reader.read();
       if (done) {
-        setIsAskButtonDisabled(false)
+        setIsActionButtonDisabled(false)
         setIsStreamDone(done)
         break;
       }
@@ -74,7 +74,7 @@ function App() {
       return
     }
     try {
-      setIsAskButtonDisabled(true)
+      setIsActionButtonDisabled(true)
       setStreamedAnswer("")
       setDisplayQuestion(question)
       setQuestion("")
@@ -145,6 +145,7 @@ function App() {
             variant="text"
             color="primary"
             sx={{ mt: 2, outline: "none" }}
+            disabled={isActionButtonsDisabled}
             onClick={() => handleClear()}
           >
             Clear
@@ -153,7 +154,7 @@ function App() {
             variant="contained"
             sx={{ mt: 2, outline: "none", backgroundColor: colors.PRIMARY }}
             onClick={e => handleClick(e)}
-            disabled={isAskButtonDisabled}
+            disabled={isActionButtonsDisabled}
           >
             Ask Me
           </Button>
